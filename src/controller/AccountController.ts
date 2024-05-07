@@ -3,6 +3,7 @@ import { db } from "../database";
 import { JWTPayload } from "express-oauth2-jwt-bearer";
 import axios from "axios";
 import { AccountTable } from "../types";
+import { redisClient } from "..";
 
 export const saveAccount = async (
   req: Request,
@@ -56,6 +57,7 @@ export const getAccountDetails = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
+  getClientCredentials();
   const auth = req.auth;
   const payload = auth?.payload as JWTPayload;
   const account = await db
@@ -145,6 +147,12 @@ export const deleteAccount = async (
 };
 
 const getClientCredentials = async () => {
+  const cachedToken = await redisClient.get("clientCredentialsToken");
+  if (cachedToken) {
+    console.log("Token retrieved from Redis");
+    return cachedToken;
+  }
+
   const response = await axios.post(
     process.env.AUTH0_ISSUER_BASE_URL + "oauth/token",
     {
@@ -155,5 +163,13 @@ const getClientCredentials = async () => {
     }
   );
 
-  return response.data.access_token;
+  const accessToken = response.data.access_token;
+  if (accessToken) {
+    await redisClient.set("clientCredentialsToken", accessToken, {
+      EX: 86400,
+    });
+    console.log("Token saved to Redis");
+  }
+
+  return accessToken;
 };
