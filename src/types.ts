@@ -10,6 +10,6 @@ export interface AccountTable {
   email: string;
   created_at: Date;
   last_login: Date;
-  avatar: string;
-  favorites_genres: string;
+  avatar?: Blob;
+  favorite_genres: string[];
 }

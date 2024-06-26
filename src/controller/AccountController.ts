@@ -1,36 +1,26 @@
-import { ErrorRequestHandler, Request, Response, response } from "express";
-import { db } from "../database";
-import { JWTPayload } from "express-oauth2-jwt-bearer";
 import axios from "axios";
-import { AccountTable } from "../types";
+import { Request, Response } from "express";
+import { JWTPayload } from "express-oauth2-jwt-bearer";
+import * as jwt from "jose";
 import { redisClient } from "..";
-
+import { db } from "../database";
 export const saveAccount = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
-  const {
-    username,
-    email,
-    created_at,
-    last_login,
-    user_id,
-    avatar,
-    favorites_genres,
-  } = req.body;
-  const auth = req.auth;
+  const { account } = req.body;
   try {
     await db.transaction().execute(async (trx) => {
       await trx
         .insertInto("account")
         .values({
-          user_id: user_id,
-          username: username,
-          email: email,
-          created_at: created_at,
-          last_login: last_login,
-          avatar: avatar,
-          favorites_genres: favorites_genres,
+          user_id: account.user_id,
+          username: account.username,
+          email: account.email,
+          created_at: account.created_at,
+          last_login: account.last_login,
+          favorite_genres: account.favorite_genres,
+          avatar: account.avatar,
         })
         .execute();
     });
@@ -57,19 +47,25 @@ export const getAccountDetails = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
-  getClientCredentials();
   const auth = req.auth;
   const payload = auth?.payload as JWTPayload;
-  const account = await db
-    .selectFrom("account")
-    .selectAll()
-    .where("user_id", "=", `${payload.sub}`)
-    .execute();
+  try {
+    const account = await db
+      .selectFrom("account")
+      .selectAll()
+      .where("user_id", "=", `${payload.sub}`)
+      .executeTakeFirst();
 
-  if (account) {
-    return res.status(200).json({ account: account });
+    if (account) {
+      return res
+        .status(200)
+        .json({ account: { ...account, avatar: account.avatar?.toString() } });
+    } else {
+      return res.status(404).json({ message: "Account not found" });
+    }
+  } catch (e) {
+    return res.status(500).json({ message: "Internal server error" });
   }
-  return res.status(404).json({ message: "Account not found" });
 };
 
 export const updateAccountDetails = async (
@@ -79,24 +75,20 @@ export const updateAccountDetails = async (
   const auth = req.auth;
   const payload = auth?.payload as JWTPayload;
 
-  // Extract fields from request body that you want to update
-  console.log(req.body);
-  const account = req.body as AccountTable;
+  const { account } = req.body;
 
   try {
-    // Update account details in the database
     const updatedAccount = await db
       .updateTable("account")
       .set({
         email: account.email,
         username: account.username,
         avatar: account.avatar,
-        favorites_genres: account.favorites_genres,
       })
       .where("user_id", "=", `${payload.sub}`)
-      .execute();
+      .executeTakeFirst();
 
-    if (updatedAccount[0].numChangedRows !== undefined) {
+    if (updatedAccount.numUpdatedRows) {
       return res.status(200).json({ message: "Account updated." });
     } else {
       return res
@@ -147,10 +139,14 @@ export const deleteAccount = async (
 };
 
 const getClientCredentials = async () => {
+  const key = jwt.EmbeddedJWK;
   const cachedToken = await redisClient.get("clientCredentialsToken");
   if (cachedToken) {
-    console.log("Token retrieved from Redis");
-    return cachedToken;
+    const now = Math.floor(Date.now() / 1000);
+    const payload = jwt.decodeJwt(cachedToken);
+    if (payload.exp && payload.exp > now) {
+      return cachedToken;
+    }
   }
 
   const response = await axios.post(
