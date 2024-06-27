@@ -32,6 +32,13 @@ const router = express.Router();
  *             type: object
  *             properties:
  *               account:
+ *                 required:
+ *                   - user_id
+ *                   - username
+ *                   - email
+ *                   - created_at
+ *                   - last_login
+ *                   - favorite_genres
  *                 type: object
  *                 properties:
  *                   user_id:
@@ -154,6 +161,10 @@ router.get("/account", getAccountDetails);
  *             type: object
  *             properties:
  *               account:
+ *                 required:
+ *                   - email
+ *                   - username
+ *                   - avatar
  *                 type: object
  *                 properties:
  *                   email:

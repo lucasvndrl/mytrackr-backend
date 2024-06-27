@@ -22,10 +22,10 @@ export const jwtCheck = auth({
   tokenSigningAlg: "RS256",
 });
 
-// app.use(jwtCheck);
-
 const specs = swaggerJSDoc(swaggerOptions);
 app.use("/api-docs", serve, setup(specs));
+
+app.use(jwtCheck);
 
 app.use(bodyParser.json({ limit: "100mb" }));
 app.use(router);
