@@ -1,14 +1,10 @@
 import express from "express";
-import {
-  deleteAccount,
-  getAccountDetails,
-  getAllAccounts,
-  saveAccount,
-  updateAccountDetails,
-} from "./controller/AccountController";
-import { getPopularMoviesList } from "./controller/MovieController";
+import { createAccountController } from "../useCases/CreateAccount";
+import { getAccountDetailsController } from "../useCases/GetAccountDetails";
+import { updateAccountController } from "../useCases/UpdateAccount";
+import { deleteAccountController } from "../useCases/DeleteAccount";
 
-const router = express.Router();
+const accountRouter = express.Router();
 
 /**
  * @swagger
@@ -82,8 +78,8 @@ const router = express.Router();
  *                   type: string
  *                   example: Cannot save account. Try again later.
  */
-router.post("/account", express.json(), (req, res) => {
-  saveAccount(req, res);
+accountRouter.post("/", express.json(), (req, res) => {
+  createAccountController.handle(req, res);
 });
 
 /**
@@ -144,7 +140,9 @@ router.post("/account", express.json(), (req, res) => {
  *                   type: string
  *                   example: Internal server error
  */
-router.get("/account", getAccountDetails);
+accountRouter.get("/", (req, res) => {
+  getAccountDetailsController.handle(req, res);
+});
 
 /**
  * @swagger
@@ -206,7 +204,9 @@ router.get("/account", getAccountDetails);
  *                   type: string
  *                   example: Internal server error
  */
-router.patch("/account", express.json(), updateAccountDetails);
+accountRouter.patch("/", express.json(), (req, res) => {
+  updateAccountController.handle(req, res);
+});
 
 /**
  * @swagger
@@ -237,6 +237,8 @@ router.patch("/account", express.json(), updateAccountDetails);
  *                   type: string
  *                   example: Account deletion failed. Try again later.
  */
-router.delete("/account", deleteAccount);
+accountRouter.delete("/", (req, res) => {
+  deleteAccountController.handle(req, res);
+});
 
-export default router;
+export default accountRouter;

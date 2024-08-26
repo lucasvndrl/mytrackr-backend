@@ -2,10 +2,10 @@ import bodyParser from "body-parser";
 import express from "express";
 import { auth } from "express-oauth2-jwt-bearer";
 import * as redis from "redis";
-import router from "./routes";
 import swaggerJSDoc from "swagger-jsdoc";
 import { serve, setup } from "swagger-ui-express";
 import swaggerOptions from "./swagger";
+import router from "./routes/routes";
 const app = express();
 const port = process.env.PORT || 8080;
 

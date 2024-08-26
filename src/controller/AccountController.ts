@@ -121,6 +121,7 @@ export const deleteAccount = async (
           },
         }
       );
+      console.log(response.status);
       if (response.status === 204) {
         await trx
           .deleteFrom("account")
