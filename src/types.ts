@@ -2,6 +2,8 @@ import { Generated } from "kysely";
 
 export interface Database {
   account: AccountTable;
+  movies: MoviesTable;
+  reviews: ReviewsTable;
 }
 
 export interface AccountTable {
@@ -12,4 +14,21 @@ export interface AccountTable {
   last_login: Date;
   avatar?: Blob;
   favorite_genres: string[];
+}
+
+export interface MoviesTable {
+  movie_id: string;
+  title: string;
+  synopsis: string;
+  directed_by: string;
+  duration: string;
+  rating: string;
+}
+
+export interface ReviewsTable {
+  review_id: string;
+  movie_id: string;
+  review_text: string;
+  reviewer_name: string;
+  rating: string;
 }

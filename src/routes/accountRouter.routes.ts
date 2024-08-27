@@ -1,8 +1,8 @@
 import express from "express";
-import { createAccountController } from "../useCases/CreateAccount";
-import { getAccountDetailsController } from "../useCases/GetAccountDetails";
-import { updateAccountController } from "../useCases/UpdateAccount";
-import { deleteAccountController } from "../useCases/DeleteAccount";
+import { createAccountController } from "../useCases/Account/CreateAccount";
+import { getAccountDetailsController } from "../useCases/Account/GetAccountDetails";
+import { updateAccountController } from "../useCases/Account/UpdateAccount";
+import { deleteAccountController } from "../useCases/Account/DeleteAccount";
 
 const accountRouter = express.Router();
 
@@ -15,7 +15,7 @@ const accountRouter = express.Router();
 
 /**
  * @swagger
- * /account:
+ * /account/:
  *   post:
  *     summary: Save an account
  *     tags: [Account]
@@ -84,7 +84,7 @@ accountRouter.post("/", express.json(), (req, res) => {
 
 /**
  * @swagger
- * /account:
+ * /account/:
  *   get:
  *     summary: Get account details
  *     tags: [Account]
@@ -146,7 +146,7 @@ accountRouter.get("/", (req, res) => {
 
 /**
  * @swagger
- * /account:
+ * /account/:
  *   patch:
  *     summary: Update account details
  *     tags: [Account]
@@ -210,7 +210,7 @@ accountRouter.patch("/", express.json(), (req, res) => {
 
 /**
  * @swagger
- * /account:
+ * /account/:
  *   delete:
  *     summary: Delete account
  *     tags: [Account]

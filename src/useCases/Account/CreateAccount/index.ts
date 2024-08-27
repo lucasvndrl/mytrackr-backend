@@ -1,4 +1,4 @@
-import { AccountRepository } from "../../repositories/AccountRepository";
+import { AccountRepository } from "../../../repositories/AccountRepository";
 import { CreateAccountController } from "./CreateAccountController";
 import { CreateAccountUseCase } from "./CreateAccountUseCase";
 

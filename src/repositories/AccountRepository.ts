@@ -1,6 +1,6 @@
 import { db } from "../database";
 import { AccountTable } from "../types";
-import { UpdateAccountDTO } from "../useCases/UpdateAccount/UpdateAccountDTO";
+import { UpdateAccountDTO } from "../useCases/Account/UpdateAccount/UpdateAccountDTO";
 import { IAccountRepository } from "./IAccountRepository";
 
 export class AccountRepository implements IAccountRepository {

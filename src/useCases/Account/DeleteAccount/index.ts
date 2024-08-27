@@ -1,4 +1,4 @@
-import { AccountRepository } from "../../repositories/AccountRepository";
+import { AccountRepository } from "../../../repositories/AccountRepository";
 import { DeleteAccountController } from "./DeleteAccountController";
 import { DeleteAccountUseCase } from "./DeleteAccountUseCase";
 

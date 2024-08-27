@@ -1,5 +1,5 @@
 import { AccountTable } from "../types";
-import { UpdateAccountDTO } from "../useCases/UpdateAccount/UpdateAccountDTO";
+import { UpdateAccountDTO } from "../useCases/Account/UpdateAccount/UpdateAccountDTO";
 
 export interface IAccountRepository {
   save(account: AccountTable): Promise<void>;

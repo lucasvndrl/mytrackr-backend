@@ -1,5 +1,5 @@
-import { IAccountRepository } from "../../repositories/IAccountRepository";
-import { AccountTable } from "../../types";
+import { IAccountRepository } from "../../../repositories/IAccountRepository";
+import { AccountTable } from "../../../types";
 
 export class CreateAccountUseCase {
   constructor(private accountRepository: IAccountRepository) {}

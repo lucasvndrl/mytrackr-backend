@@ -2,7 +2,7 @@ import { JWTPayload } from "express-oauth2-jwt-bearer";
 import { DeleteAccountUseCase } from "./DeleteAccountUseCase";
 import { Request, Response } from "express";
 import * as jwt from "jose";
-import { redisClient } from "../..";
+import { redisClient } from "../../..";
 import axios from "axios";
 
 export class DeleteAccountController {
