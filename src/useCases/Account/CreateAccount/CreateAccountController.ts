@@ -7,7 +7,6 @@ export class CreateAccountController {
     const account = request.body;
 
     try {
-      console.log(account);
       await this.createAccountUseCase.execute({
         user_id: account.user_id,
         username: account.username,

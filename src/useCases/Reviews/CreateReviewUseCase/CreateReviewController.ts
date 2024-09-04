@@ -6,7 +6,7 @@ export class CreateReviewController {
   constructor(private createReviewUseCase: CreateReviewUseCase) {}
 
   async handle(request: Request, response: Response): Promise<Response> {
-    const { movie_id, rating, review_text, reviewer_name } = request.body;
+    const { movie_id, rating, review_text, reviewer } = request.body;
 
     const reviewId = randomUUID();
 
@@ -16,7 +16,7 @@ export class CreateReviewController {
         rating: rating,
         review_id: reviewId,
         review_text: review_text,
-        reviewer_name: reviewer_name,
+        reviewer: reviewer,
       });
 
       return response.status(201).send({

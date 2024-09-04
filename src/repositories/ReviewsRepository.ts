@@ -13,7 +13,7 @@ export class ReviewsRepository implements IReviewsRepository {
           movie_id: review.movie_id,
           review_text: review.review_text,
           rating: review.rating,
-          reviewer_name: review.reviewer_name,
+          reviewer: review.reviewer,
         })
         .execute();
     });

@@ -21,14 +21,14 @@ export interface MoviesTable {
   title: string;
   synopsis: string;
   directed_by: string;
-  duration: string;
-  rating: string;
+  duration: number;
+  rating: number;
 }
 
 export interface ReviewsTable {
   review_id: string;
   movie_id: string;
   review_text: string;
-  reviewer_name: string;
-  rating: string;
+  reviewer: string;
+  rating: number;
 }
