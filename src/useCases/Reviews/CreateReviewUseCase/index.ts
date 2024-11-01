@@ -11,6 +11,9 @@ const createReviewUseCase = new CreateReviewUseCase(
   moviesRepository
 );
 
-const createReviewController = new CreateReviewController(createReviewUseCase);
+const createReviewController = new CreateReviewController(
+  createReviewUseCase,
+  moviesRepository
+);
 
 export { createReviewController };

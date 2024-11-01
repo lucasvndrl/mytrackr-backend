@@ -28,4 +28,10 @@ export class ReviewsRepository implements IReviewsRepository {
 
     return reviews as ReviewsTable[];
   }
+
+  async getAllReviews(): Promise<ReviewsTable[]> {
+    const reviews = await this.repo.selectFrom("reviews").selectAll().execute();
+
+    return reviews as ReviewsTable[];
+  }
 }

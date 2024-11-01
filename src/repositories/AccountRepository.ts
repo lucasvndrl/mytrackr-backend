@@ -32,15 +32,15 @@ export class AccountRepository implements IAccountRepository {
     return account as AccountTable;
   }
 
-  async updateDetails(account: UpdateAccountDTO): Promise<boolean> {
+  async updateDetails(accountDTO: UpdateAccountDTO): Promise<boolean> {
     const updatedAccount = await this.repo
       .updateTable("account")
       .set({
-        email: account.email,
-        username: account.username,
-        avatar: account.avatar,
+        email: accountDTO.account.email,
+        username: accountDTO.account.username,
+        avatar: accountDTO.account.avatar,
       })
-      .where("user_id", "=", account.user_id)
+      .where("user_id", "=", accountDTO.account.user_id)
       .executeTakeFirst();
     if (updatedAccount.numUpdatedRows) {
       return true;

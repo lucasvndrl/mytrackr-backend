@@ -1,6 +1,8 @@
 export interface UpdateAccountDTO {
-  user_id: string;
-  email: string;
-  username: string;
-  avatar: Blob;
+  account: {
+    email: string;
+    username: string;
+    avatar: Blob;
+    user_id: string;
+  };
 }

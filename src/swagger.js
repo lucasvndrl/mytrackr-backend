@@ -53,10 +53,68 @@ const swaggerOptions = {
             },
           },
         },
+        Review: {
+          type: "object",
+          require: [
+            "review_id",
+            "movie_id",
+            "review_text",
+            "reviewer",
+            "rating",
+          ],
+          properties: {
+            review_id: {
+              type: "string",
+            },
+            movie_id: {
+              type: "string",
+            },
+            review_text: {
+              type: "string",
+            },
+            reviewer: {
+              type: "string",
+            },
+            rating: {
+              type: "number",
+            },
+          },
+        },
+        Movie: {
+          type: "object",
+          require: [
+            "movie_id",
+            "title",
+            "synopsis",
+            "directed_by",
+            "duration",
+            "rating",
+          ],
+          properties: {
+            movie_id: {
+              type: "string",
+            },
+            title: {
+              type: "string",
+            },
+            synopsis: {
+              type: "string",
+            },
+            directed_by: {
+              type: "string",
+            },
+            duration: {
+              type: "number",
+            },
+            rating: {
+              type: "number",
+            },
+          },
+        },
       },
     },
   },
-  apis: ["./src/routes.ts"],
+  apis: ["./src/routes/**.ts"],
 };
 
 export default swaggerOptions;

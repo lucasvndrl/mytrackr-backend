@@ -10,18 +10,14 @@ export class UpdateAccountController {
     const auth = request.auth;
     const payload = auth?.payload as JWTPayload;
 
-    const { avatar, email, username } = request.body as UpdateAccountDTO;
+    const account = request.body as UpdateAccountDTO;
 
     try {
-      await this.updateAccountUseCase.execute({
-        avatar: avatar,
-        email: email,
-        username: username,
-        user_id: payload.sub ? payload.sub : "",
-      });
+      await this.updateAccountUseCase.execute(account);
 
       return response.status(200).send();
     } catch (error: any) {
+      console.log(error);
       return response.status(400).json({
         message: error.message || "Unexpected error.",
       });

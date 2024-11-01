@@ -11,16 +11,19 @@ export class DeleteAccountController {
   async handle(request: Request, response: Response): Promise<Response> {
     const auth = request.auth;
     const payload = auth?.payload as JWTPayload;
-
+    let clientGrantToken;
+    let isAccountDeletedAuth0;
     try {
-      const clientGrantToken = await this.getClientCredentials();
+      if (process.env.NODE_ENV !== "test") {
+        clientGrantToken = await this.getClientCredentials();
 
-      const isAccountDeletedAuth0 = await this.deleteAccountFromAuth0(
-        payload.sub ? payload.sub : "",
-        clientGrantToken
-      );
+        isAccountDeletedAuth0 = await this.deleteAccountFromAuth0(
+          payload.sub ? payload.sub : "",
+          clientGrantToken
+        );
+      }
 
-      if (isAccountDeletedAuth0) {
+      if (isAccountDeletedAuth0 || process.env.NODE_ENV === "test") {
         await this.deleteAccountUseCase.execute(payload.sub ? payload.sub : "");
       } else {
         return response.status(500).json({

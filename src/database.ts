@@ -4,17 +4,17 @@ import { Database } from "./types";
 
 // it is possible to run migrations using kysely, doc: https://kysely.dev/docs/migrations
 
-const dialect = new PostgresDialect({
+const postgresDialect = new PostgresDialect({
   pool: new Pool({
-    database: "postgres",
+    database: process.env.NODE_ENV === "test" ? "testdb" : "postgres",
     host: "localhost",
-    user: "postgres",
-    password: "1234",
+    user: process.env.NODE_ENV === "test" ? "test" : "postgres",
+    password: process.env.NODE_ENV === "test" ? "test" : "1234",
     port: 5432,
     max: 10,
   }),
 });
 
 export const db = new Kysely<Database>({
-  dialect,
+  dialect: postgresDialect,
 });

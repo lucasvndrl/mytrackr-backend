@@ -1,3 +1,4 @@
+import AppError from "../../../error/AppError";
 import { IAccountRepository } from "../../../repositories/IAccountRepository";
 import { AccountTable } from "../../../types";
 
@@ -7,7 +8,7 @@ export class GetAccountDetailsUseCase {
   async execute(userId: string): Promise<AccountTable> {
     const account = await this.accountRepository.getDetails(userId);
     if (account === undefined) {
-      throw new Error("Account not found.");
+      throw new AppError("Account not found.", 404);
     }
     return account;
   }

@@ -17,4 +17,12 @@ export class MoviesRepository {
 
     return movie as MoviesTable;
   }
+
+  async updateMovieRating(movieId: string, rating: number): Promise<void> {
+    await this.repo
+      .updateTable("movies")
+      .set("rating", rating)
+      .where("movie_id", "=", movieId)
+      .execute();
+  }
 }

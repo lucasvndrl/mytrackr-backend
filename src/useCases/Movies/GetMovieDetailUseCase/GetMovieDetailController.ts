@@ -29,6 +29,7 @@ export class GetMovieDetailController {
           message: "Movie not found.",
         });
       }
+
       return response.json(movie);
     } catch (error: any) {
       return response.status(400).json({

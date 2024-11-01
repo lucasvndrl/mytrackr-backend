@@ -1,9 +1,13 @@
 import { Request, Response } from "express";
 import { CreateReviewUseCase } from "./CreateReviewUseCase";
 import { randomUUID } from "crypto";
+import { IMoviesRepository } from "../../../repositories/IMoviesRepository";
 
 export class CreateReviewController {
-  constructor(private createReviewUseCase: CreateReviewUseCase) {}
+  constructor(
+    private createReviewUseCase: CreateReviewUseCase,
+    private moviesRepository: IMoviesRepository
+  ) {}
 
   async handle(request: Request, response: Response): Promise<Response> {
     const { movie_id, rating, review_text, reviewer } = request.body;
@@ -18,6 +22,12 @@ export class CreateReviewController {
         review_text: review_text,
         reviewer: reviewer,
       });
+
+      const movie = await this.moviesRepository.getMoveDetails(movie_id);
+
+      const newMovieRating = Math.round((movie.rating + rating) / 2);
+
+      await this.moviesRepository.updateMovieRating(movie_id, newMovieRating);
 
       return response.status(201).send({
         message: "Review created successfully.",
