@@ -4,7 +4,7 @@ import { CreateAccountUseCase } from "./CreateAccountUseCase";
 export class CreateAccountController {
   constructor(private createAccountUseCase: CreateAccountUseCase) {}
   async handle(request: Request, response: Response) {
-    const account = request.body;
+    const { account } = request.body;
 
     try {
       await this.createAccountUseCase.execute({

@@ -15,6 +15,7 @@ export class DeleteAccountController {
     let isAccountDeletedAuth0;
     try {
       if (process.env.NODE_ENV !== "test") {
+        console.log("oiii");
         clientGrantToken = await this.getClientCredentials();
 
         isAccountDeletedAuth0 = await this.deleteAccountFromAuth0(
@@ -45,7 +46,7 @@ export class DeleteAccountController {
   ): Promise<boolean> => {
     try {
       const response = await fetch(
-        process.env.AUTH0_AUDIENCE + `users/${userId.sub}`,
+        process.env.AUTH0_AUDIENCE + `users/${userId}`,
         {
           method: "DELETE",
           headers: {
@@ -53,6 +54,7 @@ export class DeleteAccountController {
           },
         }
       );
+
       return response.status === 204;
     } catch (error) {
       console.error(JSON.stringify(error, null, 2));
@@ -63,6 +65,7 @@ export class DeleteAccountController {
   private getClientCredentials = async () => {
     const key = jwt.EmbeddedJWK;
     const cachedToken = await redisClient.get("clientCredentialsToken");
+
     if (cachedToken) {
       const now = Math.floor(Date.now() / 1000);
       const payload = jwt.decodeJwt(cachedToken);
