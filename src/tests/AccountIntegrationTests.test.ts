@@ -15,13 +15,15 @@ describe("CreateAccountController Integration Tests", () => {
 
   it("should successfully create an account and return 201", async () => {
     const newAccount = {
-      user_id: "unique_user_id",
-      username: "testuser",
-      email: "test@example.com",
-      created_at: new Date(),
-      last_login: new Date(),
-      favorite_genres: ["action", "comedy"],
-      avatar: "avatar_url",
+      account: {
+        user_id: "unique_user_id",
+        username: "testuser",
+        email: "test@example.com",
+        created_at: new Date(),
+        last_login: new Date(),
+        favorite_genres: ["action", "comedy"],
+        avatar: "avatar_url",
+      },
     };
 
     const response = await request(app).post("/account").send(newAccount);
@@ -73,10 +75,14 @@ describe("CreateAccountController Integration Tests", () => {
   });
 
   it("should return 200 if the account is correctly updated", async () => {
-    const response = await request(app).patch("/account").send({
-      email: "new_email@email.com",
-      username: "new_username",
-    });
+    const response = await request(app)
+      .patch("/account")
+      .send({
+        account: {
+          email: "new_email@email.com",
+          username: "new_username",
+        },
+      });
 
     expect(response.status).toBe(200);
   });

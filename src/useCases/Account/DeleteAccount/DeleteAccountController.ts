@@ -15,7 +15,6 @@ export class DeleteAccountController {
     let isAccountDeletedAuth0;
     try {
       if (process.env.NODE_ENV !== "test") {
-        console.log("oiii");
         clientGrantToken = await this.getClientCredentials();
 
         isAccountDeletedAuth0 = await this.deleteAccountFromAuth0(
