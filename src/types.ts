@@ -31,4 +31,5 @@ export interface ReviewsTable {
   review_text: string;
   reviewer: string;
   rating: number;
+  review_created: Date;
 }

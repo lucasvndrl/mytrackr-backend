@@ -14,6 +14,7 @@ export class ReviewsRepository implements IReviewsRepository {
           review_text: review.review_text,
           rating: review.rating,
           reviewer: review.reviewer,
+          review_created: review.review_created,
         })
         .execute();
     });
@@ -24,13 +25,18 @@ export class ReviewsRepository implements IReviewsRepository {
       .selectFrom("reviews")
       .selectAll()
       .where("movie_id", "=", movieId)
+      .orderBy("review_created", "desc")
       .execute();
 
     return reviews as ReviewsTable[];
   }
 
   async getAllReviews(): Promise<ReviewsTable[]> {
-    const reviews = await this.repo.selectFrom("reviews").selectAll().execute();
+    const reviews = await this.repo
+      .selectFrom("reviews")
+      .selectAll()
+      .orderBy("review_created", "desc")
+      .execute();
 
     return reviews as ReviewsTable[];
   }

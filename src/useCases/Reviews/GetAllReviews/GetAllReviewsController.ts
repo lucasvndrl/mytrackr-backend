@@ -27,6 +27,7 @@ export class GetAllReviewsController {
   }
 
   async transformResponse(reviews: ReviewsTable[]) {
+    console.log(JSON.stringify(reviews, null, 2));
     const transformedResponse = reviews.map(async (review) => {
       const movie = await this.getMovieDetailsUseCase.execute(review.movie_id);
       const reviewerAccount = await this.getAccountDetailsUseCase.execute(

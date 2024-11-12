@@ -21,6 +21,7 @@ export class CreateReviewController {
         review_id: reviewId,
         review_text: review_text,
         reviewer: reviewer,
+        review_created: new Date(),
       });
 
       const movie = await this.moviesRepository.getMoveDetails(movie_id);
