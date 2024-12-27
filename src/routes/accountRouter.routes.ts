@@ -3,6 +3,11 @@ import { createAccountController } from "../useCases/Account/CreateAccount";
 import { getAccountDetailsController } from "../useCases/Account/GetAccountDetails";
 import { updateAccountController } from "../useCases/Account/UpdateAccount";
 import { deleteAccountController } from "../useCases/Account/DeleteAccount";
+import {
+  createAccountSchema,
+  updateAccountSchema,
+} from "../schemas/accountSchema";
+import { z } from "zod";
 
 const accountRouter = express.Router();
 
@@ -79,7 +84,18 @@ const accountRouter = express.Router();
  *                   example: Cannot save account. Try again later.
  */
 accountRouter.post("/", express.json(), (req, res) => {
-  createAccountController.handle(req, res);
+  try {
+    const validatedData = createAccountSchema.parse(req.body);
+
+    req.body = validatedData;
+
+    createAccountController.handle(req, res);
+  } catch (err) {
+    if (err instanceof z.ZodError) {
+      return res.status(400).json({ message: err.errors });
+    }
+    return res.status(500).json({ message: "Unexpected error." });
+  }
 });
 
 /**
@@ -205,7 +221,17 @@ accountRouter.get("/", (req, res) => {
  *                   example: Internal server error
  */
 accountRouter.patch("/", express.json(), (req, res) => {
-  updateAccountController.handle(req, res);
+  try {
+    const validatedData = updateAccountSchema.parse(req.body);
+    req.body = validatedData;
+
+    updateAccountController.handle(req, res);
+  } catch (err) {
+    if (err instanceof z.ZodError) {
+      return res.status(400).json({ message: err.errors[0].message });
+    }
+    return res.status(500).json({ message: "Unexpected error." });
+  }
 });
 
 /**

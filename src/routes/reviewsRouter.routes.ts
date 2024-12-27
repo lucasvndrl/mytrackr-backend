@@ -2,6 +2,8 @@ import express from "express";
 import { createReviewController } from "../useCases/Reviews/CreateReviewUseCase";
 import { getReviewsFromMovieController } from "../useCases/Reviews/GetReviewsFromMovieUseCase";
 import { getAllReviewsController } from "../useCases/Reviews/GetAllReviews";
+import { createReviewSchema } from "../schemas/reviewsSchema";
+import { z } from "zod";
 
 const reviewsRouter = express.Router();
 
@@ -74,7 +76,19 @@ const reviewsRouter = express.Router();
  *                   example: Cannot save account. Try again later.
  */
 reviewsRouter.post("/", express.json(), (req, res) => {
-  createReviewController.handle(req, res);
+  try {
+    const validatedData = createReviewSchema.parse(req.body);
+
+    req.body = validatedData;
+
+    createReviewController.handle(req, res);
+  } catch (err) {
+    if (err instanceof z.ZodError) {
+      return res.status(400).json({ message: err.errors[0].message });
+    }
+
+    return res.status(500).json({ message: "Unexpected error." });
+  }
 });
 
 /**
