@@ -11,7 +11,7 @@ export class CreateReviewController {
 
   async handle(request: Request, response: Response): Promise<Response> {
     const { movie_id, rating, review_text, reviewer } = request.body;
-
+    console.log(request);
     const reviewId = randomUUID();
 
     try {

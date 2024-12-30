@@ -22,26 +22,29 @@ export class GetAllReviewsController {
 
       return response.status(200).json(transformedReviews);
     } catch (error: any) {
+      console.log(error);
       return response.status(error.statusCode).json({ error: error.message });
     }
   }
 
   async transformResponse(reviews: ReviewsTable[]) {
-    console.log(JSON.stringify(reviews, null, 2));
     const transformedResponse = reviews.map(async (review) => {
       const movie = await this.getMovieDetailsUseCase.execute(review.movie_id);
-      const reviewerAccount = await this.getAccountDetailsUseCase.execute(
-        review.reviewer
-      );
+      let reviewerAccount;
+      if (review.reviewer !== null) {
+        reviewerAccount = await this.getAccountDetailsUseCase.execute(
+          review.reviewer
+        );
+      }
       return {
         review_id: review.review_id,
         movie_id: review.movie_id,
         review_text: review.review_text,
         rating: review.rating,
-        reviewer: review.reviewer,
+        reviewer: review.reviewer ?? null,
         movie_title: movie.title,
-        reviewer_name: reviewerAccount.username ?? "",
-        reviewer_avatar: reviewerAccount.avatar ?? "",
+        reviewer_name: reviewerAccount?.username ?? "",
+        reviewer_avatar: reviewerAccount?.avatar ?? "",
       } as GetAllReviewsDTO;
     });
 

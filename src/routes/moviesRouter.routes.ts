@@ -1,6 +1,8 @@
 import express from "express";
 import { getAllMoviesController } from "../useCases/Movies/GetAllMoviesUseCase";
 import { getMovieDetailController } from "../useCases/Movies/GetMovieDetailUseCase";
+import { getMovieByIdSchema } from "../schemas/moviesSchema";
+import { z } from "zod";
 
 const moviesRouter = express.Router();
 
@@ -124,8 +126,19 @@ moviesRouter.get("/", (req, res) => getAllMoviesController.handle(req, res));
  *                   type: string
  *                   example: Internal server error
  */
-moviesRouter.get("/:movieId", (req, res) =>
-  getMovieDetailController.handle(req, res)
-);
+moviesRouter.get("/:movieId", (req, res) => {
+  try {
+    const validatedData = getMovieByIdSchema.parse(req.params);
+
+    req.params = validatedData;
+
+    getMovieDetailController.handle(req, res);
+  } catch (err) {
+    if (err instanceof z.ZodError) {
+      return res.status(400).json({ message: err.message });
+    }
+    return res.status(500).json({ message: "Unexpected error." });
+  }
+});
 
 export default moviesRouter;

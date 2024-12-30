@@ -1,12 +1,12 @@
 import express from "express";
-import { createAccountController } from "../useCases/Account/CreateAccount";
-import { getAccountDetailsController } from "../useCases/Account/GetAccountDetails";
-import { updateAccountController } from "../useCases/Account/UpdateAccount";
-import { deleteAccountController } from "../useCases/Account/DeleteAccount";
 import {
   createAccountSchema,
   updateAccountSchema,
 } from "../schemas/accountSchema";
+import { createAccountController } from "../useCases/Account/CreateAccount";
+import { deleteAccountController } from "../useCases/Account/DeleteAccount";
+import { getAccountDetailsController } from "../useCases/Account/GetAccountDetails";
+import { updateAccountController } from "../useCases/Account/UpdateAccount";
 import { z } from "zod";
 
 const accountRouter = express.Router();
@@ -88,11 +88,11 @@ accountRouter.post("/", express.json(), (req, res) => {
     const validatedData = createAccountSchema.parse(req.body);
 
     req.body = validatedData;
-
     createAccountController.handle(req, res);
   } catch (err) {
     if (err instanceof z.ZodError) {
-      return res.status(400).json({ message: err.errors });
+      console.log(err.errors[0]);
+      return res.status(400).json({ message: err.message });
     }
     return res.status(500).json({ message: "Unexpected error." });
   }
@@ -223,12 +223,12 @@ accountRouter.get("/", (req, res) => {
 accountRouter.patch("/", express.json(), (req, res) => {
   try {
     const validatedData = updateAccountSchema.parse(req.body);
-    req.body = validatedData;
 
-    updateAccountController.handle(req, res);
+    req.body = validatedData;
   } catch (err) {
     if (err instanceof z.ZodError) {
-      return res.status(400).json({ message: err.errors[0].message });
+      console.log(err.errors[0]);
+      return res.status(400).json({ message: err.message });
     }
     return res.status(500).json({ message: "Unexpected error." });
   }

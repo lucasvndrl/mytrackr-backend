@@ -2,7 +2,10 @@ import express from "express";
 import { createReviewController } from "../useCases/Reviews/CreateReviewUseCase";
 import { getReviewsFromMovieController } from "../useCases/Reviews/GetReviewsFromMovieUseCase";
 import { getAllReviewsController } from "../useCases/Reviews/GetAllReviews";
-import { createReviewSchema } from "../schemas/reviewsSchema";
+import {
+  createReviewSchema,
+  getReviewsFromMovieSchema,
+} from "../schemas/reviewsSchema";
 import { z } from "zod";
 
 const reviewsRouter = express.Router();
@@ -84,6 +87,7 @@ reviewsRouter.post("/", express.json(), (req, res) => {
     createReviewController.handle(req, res);
   } catch (err) {
     if (err instanceof z.ZodError) {
+      console.log(err.errors[0]);
       return res.status(400).json({ message: err.errors[0].message });
     }
 
@@ -139,9 +143,21 @@ reviewsRouter.post("/", express.json(), (req, res) => {
  *                   type: string
  *                   example: Internal server error
  */
-reviewsRouter.get("/:movieId", (req, res) =>
-  getReviewsFromMovieController.handle(req, res)
-);
+reviewsRouter.get("/:movieId", (req, res) => {
+  try {
+    const validatedData = getReviewsFromMovieSchema.parse(req.params);
+
+    req.params = validatedData;
+
+    getReviewsFromMovieController.handle(req, res);
+  } catch (err) {
+    if (err instanceof z.ZodError) {
+      return res.status(400).json({ message: err.errors[0].message });
+    }
+
+    return res.status(500).json({ message: "Unexpected error." });
+  }
+});
 
 reviewsRouter.get("/", (req, res) => getAllReviewsController.handle(req, res));
 
