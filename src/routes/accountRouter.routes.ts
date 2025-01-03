@@ -225,6 +225,7 @@ accountRouter.patch("/", express.json(), (req, res) => {
     const validatedData = updateAccountSchema.parse(req.body);
 
     req.body = validatedData;
+    updateAccountController.handle(req, res);
   } catch (err) {
     if (err instanceof z.ZodError) {
       console.log(err.errors[0]);
